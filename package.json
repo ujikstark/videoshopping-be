@@ -1,0 +1,22 @@
+{
+  "name": "videoshopping-be",
+  "version": "1.0.0",
+  "description": "Backend for Video Shopping (Mid Term Project Generasi Gigih 3.0)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ujikstark/videoshopping-be.git"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "Ahmad Fauzi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ujikstark/videoshopping-be/issues"
+  },
+  "homepage": "https://github.com/ujikstark/videoshopping-be#readme"
+}
