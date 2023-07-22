@@ -66,7 +66,7 @@ router.post('/products', async (req, res) => {
 
     try {
         const productToSave = await product.save();
-        res.status(200).json(productToSave);
+        res.status(201).json(productToSave);
     } catch (error) {
         res.status(400).json({message: error.message});
     }
@@ -82,7 +82,7 @@ router.post('/comments', async (req, res) => {
 
     try {
         const commentToSave = await comment.save();
-        res.status(200).json(commentToSave);
+        res.status(201).json(commentToSave);
     } catch (error) {
         res.status(400).json({message: error.message});
     }
