@@ -1,3 +1,7 @@
+# Backend Video Shopping
+
+This Repository specially for Backend Video Shopping Project (Mid Term Project Generasi Gigih 3.0) 
+
 ## API Structure
 
 This README provides a comprehensive explanation of the API structure for our application, implemented using Express.js and Mongoose. The API offers endpoints for managing videos, products, and comments. allowing users to perform CRUD operations efficiently.
