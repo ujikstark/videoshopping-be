@@ -276,7 +276,7 @@ Certainly! Below are the detailed API endpoints for numbers 1, 2, 3, 5, and 8:
 }
 ```
 
-Please note that the examples provided above are for illustrative purposes and the actual data may vary depending on your specific application and database. Also, ensure to replace `'your-database-url'` with the actual URL to your MongoDB database in the `app.js` file.
+Please note that the examples provided above are for illustrative purposes and the actual data may vary depending on your specific application and database. Also, ensure to replace `'DATABASE_URL'` with the actual URL to your MongoDB server.
 ...
 
 ### Error Handling
