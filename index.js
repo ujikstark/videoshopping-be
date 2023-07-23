@@ -2,8 +2,12 @@ require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
-const mongoString = process.env.DATABASE_URL;
 
+// Check if the NODE_ENV environment variable is set to 'test'
+const isTesting = process.env.NODE_ENV === 'test';
+
+// Use a different database URL for testing
+const mongoString = isTesting ? process.env.DATABASE_TEST_URL : process.env.DATABASE_URL;
 
 mongoose.connect(mongoString);
 
@@ -27,3 +31,5 @@ app.use('/api', routes);
 app.listen(port, () => {
     console.log(`listening on port ${port}`)
 });
+
+module.exports = app;
