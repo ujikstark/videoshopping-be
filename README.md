@@ -42,7 +42,7 @@ To set up and run the API, follow these steps:
 2. Install the required dependencies using `npm install`.
 3. Configure the MongoDB connection URL in .env
 4. Start your MongoDB server and make sure it is running.
-5. Run the API using `npm start`.
+5. Run the API using `npm start` or Run the test using `npm test`.
 
 
 ## Database Structure
