@@ -24,6 +24,8 @@ router.post('/users', async (req, res) => {
 // Route: POST /videos (Create a new video)
 router.post('/videos', async (req, res) => {
     const video = new Video({
+        title: req.body.title,
+        userId: req.body.userId,
         thumbnailImageUrl: req.body.thumbnailImageUrl,
         products: req.body.products,
     });
