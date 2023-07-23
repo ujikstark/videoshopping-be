@@ -18,8 +18,10 @@ This README provides a comprehensive explanation of the API structure for our ap
     - [4. GET /videos](#4-get-videos)
     - [5. POST /videos](#5-post-videos)
     - [6. GET /videos/:id](#6-get-videosid)
-    - [7. POST /products](#7-post-products)
-    - [8. POST /comments](#8-post-comments)
+    - [7. GET /videos/:videoId/products](#7-get-products-by-videoid)
+    - [8. GET /videos/:videoId/comments](#7-get-comments-by-videoid)    
+    - [9. POST /products](#7-post-products)
+    - [10. POST /comments](#8-post-comments)
 5. [Error Handling](#error-handling)
 6. [Usage Examples](#usage-examples)
 7. [Conclusion](#conclusion)
@@ -326,7 +328,75 @@ Content-Type: application/json
 }
 ```
 
-### 7. POST /products
+
+### 7. GET /videos/:videoId/products
+
+- **Description**: This endpoint retrieves the products associated with a specific video identified by `:videoId`.
+
+- **HTTP Method**: GET
+
+- **URL Parameters**:
+  - `:videoId` (required): The unique identifier (ID) of the video for which you want to retrieve the associated products.
+
+- **Response**: The response will be an array of product objects, each containing information about the product.
+
+- **Example Response**:
+```json
+[
+  {
+    "_id": "6152f0f5a7b6d3f582ed85e0",
+    "productUrl": "https://example.com/product1",
+    "title": "Product 1",
+    "price": 200023,
+    "videoId": "6152f0f5a7b6d3f582ed85d0"
+  },
+  {
+    "_id": "6152f0f5a7b6d3f582ed85e1",
+    "productUrl": "https://example.com/product2",
+    "title": "Product 2",
+    "price": 22331,
+    "videoId": "6152f0f5a7b6d3f582ed85d0"
+  },
+  // More products associated with the video...
+]
+```
+
+### 8. GET /videos/:videoId/comments
+
+- **Description**: This endpoint retrieves the comments associated with a specific video identified by `:videoId`.
+
+- **HTTP Method**: GET
+
+- **URL Parameters**:
+  - `:videoId` (required): The unique identifier (ID) of the video for which you want to retrieve the associated comments.
+
+- **Response**: The response will be an array of comment objects, each containing information about the comment.
+
+- **Example Response**:
+```json
+[
+  {
+    "_id": "6152f0f5a7b6d3f582ed85c0",
+    "username": "User1",
+    "comment": "This video is awesome!",
+    "videoId": "6152f0f5a7b6d3f582ed85d0",
+    "createdAt": "2023-07-21T12:34:56.789Z",
+    "updatedAt": "2023-07-21T12:34:56.789Z"
+  },
+  {
+    "_id": "6152f0f5a7b6d3f582ed85c1",
+    "username": "User2",
+    "comment": "Great content!",
+    "videoId": "6152f0f5a7b6d3f582ed85d0",
+    "createdAt": "2023-07-21T12:35:12.345Z",
+    "updatedAt": "2023-07-21T12:35:12.345Z"
+  },
+  // More comments associated with the video...
+]
+```
+
+
+### 9. POST /products
 
 - **Description**: This endpoint allows the creation of a new product associated with a specific video.
 
@@ -361,7 +431,7 @@ Content-Type: application/json
 }
 ```
 
-### 8. POST /comments
+### 10. POST /comments
 
 - **Description**: This endpoint allows the creation of a new comment associated with a specific video.
 
@@ -411,8 +481,10 @@ Here are some examples of how to use the API:
 4. To retrieve all videos: Send a GET request to `/videos`.
 5. To create a new video: Send a POST request to `/videos` with the required details in the request body.
 6. To retrieve the details of a video with associated products and comments: Send a GET request to `/videos/:id`, replacing `:id` with the video ID.
-7. To create a new product associated with a video: Send a POST request to `/products` with the required product details in the request body, including the `videoId`.
-8. To create a new comment associated with a video: Send a POST request to `/comments` with the required comment details in the request body, including the `videoId`.
+7. To retrieve the products associated with a specific video: Send a GET request to /videos/:videoId/products, replacing :videoId with the video ID.
+8. To retrieve the comments associated with a specific video: Send a GET request to /videos/:videoId/comments, replacing :videoId with the video ID.
+9. To create a new product associated with a video: Send a POST request to `/products` with the required product details in the request body, including the `videoId`.
+10. To create a new comment associated with a video: Send a POST request to `/comments` with the required comment details in the request body, including the `videoId`.
 
 ### Conclusion
 
