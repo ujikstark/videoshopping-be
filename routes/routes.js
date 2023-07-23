@@ -22,31 +22,33 @@ router.post('/users', async (req, res) => {
 });
 
 
-// Route: GET /users (Get all users)
+// Route: GET /users (Retrieve all users)
 router.get('/users', async (req, res) => {
 
     try {
         const users = await User.find();
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Users not found' });
+        }
         res.status(200).json(users);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving users', error: err.message });
     }
 });
 
-// Route: GET /users/:id (Get user detail by id)
+// Route: GET /users/:id (Retrieve user detail by id)
 router.get('/users/:id', async (req, res) => {
     const id = req.params.id;
 
     try {
         const user = await User.findById(id);
         if (!user) {
-            throw new Error(`User with id '${id}' not found`);
+            return res.status(404).json({ message: `User with id '${id}' not found` });
         }
-
         res.status(200).json(user);
 
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving user', error: err.message });
     }
 });
 
@@ -62,8 +64,8 @@ router.post('/videos', async (req, res) => {
     try {
         const videoToSave = await video.save();
         res.status(201).json(videoToSave);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    } catch (err) {
+        res.status(500).json({ message: 'Error creating video', error: err.message });
     }
 });
 
@@ -72,39 +74,62 @@ router.get('/videos', async (req, res) => {
 
     try {
         const videos = await Video.find();
+
+        if (videos.length === 0) {
+            return res.status(404).json({ message: 'videos not found' });
+        }
         res.status(200).json(videos);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving videos', error: err.message });
     }
 });
 
-// Route: GET /videos/:id (Get video details with products and comments)
+// Route: GET /videos/:id (Retrieve video details by id)
 router.get('/videos/:id', async (req, res) => {
     const id = req.params.id;
 
     try {
         const video = await Video.findById(id);
         if (!video) {
-            throw new Error(`Video with id '${id}' not found`);
+            return res.status(404).json({ message: `Video with id '${id}' not found` });
         }
 
-        const products = await Product.find({ videoId: id });
-        const comments = await Comment.find({ videoId: id });
+        res.status(200).json(video);
 
-        const videoDetail = {
-            _id: video.id,
-            title: video.title,
-            thumbnailImageUrl: video.thumbnailImageUrl,
-            products: products,
-            comments: comments
-        }
-
-        res.status(200).json(videoDetail);
-
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving video', error: err.message });
     }
 });
+
+// Route: GET /videos/:videoId/products (Retrieve products by videoId)
+router.get('/videos/:videoId/products', async (req, res) => {
+    const videoId = req.params.videoId;
+    try {
+        const products = await Product.find({ videoId: videoId });
+        if (products.length === 0) {
+            return res.status(404).json({ message: 'Products not found for this video' });
+        }
+        res.status(200).json(products);
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving products', error: err.message });
+    }
+});
+
+// Route: GET /videos/:videoId/comments (Retrieve comments by videoId)
+router.get('/videos/:videoId/comments', async (req, res) => {
+    const videoId = req.params.videoId;
+    try {
+        const comments = await Comment.find({ videoId: videoId });
+        if (comments.length === 0) {
+            return res.status(404).json({ message: 'Comments not found for this video' });
+        }
+        res.status(200).json(comments);
+    } catch (err) {
+        res.status(500).json({ message: 'Error retrieving commments', error: err.message });
+    }
+});
+
+
 
 // Route: POST /products (Create a new product)
 router.post('/products', async (req, res) => {
@@ -118,8 +143,8 @@ router.post('/products', async (req, res) => {
     try {
         const productToSave = await product.save();
         res.status(201).json(productToSave);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    } catch (err) {
+        res.status(500).json({ message: 'Error creating product', error: err.message });
     }
 
 });
@@ -136,7 +161,7 @@ router.post('/comments', async (req, res) => {
         const commentToSave = await comment.save();
         res.status(201).json(commentToSave);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(500).json({ message: 'Error creating comments', error: err.message });
     }
 })
 
