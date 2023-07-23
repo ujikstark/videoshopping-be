@@ -9,6 +9,11 @@ const videoSchema = new mongoose.Schema({
     thumbnailImageUrl: {
         required: true,
         type: String
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
     }
 });
 
