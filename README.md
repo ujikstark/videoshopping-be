@@ -4,7 +4,7 @@ This Repository specially for Backend Video Shopping Project (Mid Term Project G
 
 ## API Structure
 
-This README provides a comprehensive explanation of the API structure for our application, implemented using Express.js and Mongoose. The API offers endpoints for managing videos, products, and comments. allowing users to perform CRUD operations efficiently.
+This README provides a comprehensive explanation of the API structure for our application, implemented using Express.js and Mongoose. The API offers endpoints for managing users, videos, products, and comments. allowing users to perform CRUD operations efficiently.
 
 ### Table of Contents
 
@@ -12,11 +12,14 @@ This README provides a comprehensive explanation of the API structure for our ap
 2. [Getting Started](#getting-started)
 3. [Database Structure](#database-structure)
 4. [API Endpoints](#api-endpoints)
-    - [1. GET /videos](#1-get-videos)
-    - [2. POST /videos](#2-post-videos)
-    - [3. GET /videos/:id](#3-get-videosid)
-    - [4. POST /products](#4-post-products)
-    - [5. POST /comments](#5-post-comments)
+    - [1. GET /users](#1-get-users)
+    - [2. POST /users](#2-post-users)
+    - [3. GET /users/:id](#3-get-usersid)
+    - [4. GET /videos](#4-get-videos)
+    - [5. POST /videos](#5-post-videos)
+    - [6. GET /videos/:id](#6-get-videosid)
+    - [7. POST /products](#7-post-products)
+    - [8. POST /comments](#8-post-comments)
 5. [Error Handling](#error-handling)
 6. [Usage Examples](#usage-examples)
 7. [Conclusion](#conclusion)
@@ -44,13 +47,32 @@ To set up and run the API, follow these steps:
 
 The API utilizes MongoDB as the database. It consists of three main schemas:
 
+### User Schema
+
+The `userSchema` represents users in the system. Each user is associated with a unique `_id`, represented as a `String` type. The schema includes the following properties:
+
+- **_id**: A unique identifier for the user (String).
+- **name**: The name of the user (String, required).
+- **photoUrl**: The URL of the user's profile photo (String).
+
+Example:
+
+```json
+{
+  "_id": "6152f0f5a7b6d3f582ed85da",
+  "name": "John Doe",
+  "photoUrl": "https://example.com/john-doe.jpg"
+}
+```
+
 ### Video Schema
 
-The `videoSchema` represents videos in the system. Each video is associated with a unique `_id`, represented as a `String` type. The schema includes the following properties:
+The `videoSchema` represents videos associated with users in the system. Each video is associated with a unique `_id`, represented as a `String` type. The schema includes the following properties:
 
 - **_id**: A unique identifier for the video (String).
 - **title**: The title of the video (String, required).
 - **thumbnailImageUrl**: The URL of the video's thumbnail image (String, required).
+- **userId**: The `_id` of the user who created the video (Reference to `User`, required).
 
 Example:
 
@@ -58,7 +80,8 @@ Example:
 {
   "_id": "6152f0f5a7b6d3f582ed85d0",
   "title": "Video 1",
-  "thumbnailImageUrl": "https://example.com/video1.jpg"
+  "thumbnailImageUrl": "https://example.com/video1.jpg",
+  "userId": "6152f0f5a7b6d3f582ed85da"
 }
 ```
 
@@ -109,17 +132,102 @@ These schemas define the structure of the data stored in the MongoDB database. T
 
 ### API Endpoints
 
-The API offers the following endpoints for managing videos, products, and comments:
+The API offers the following endpoints for managing users, videos, products, and comments:
 
-Certainly! Below are the detailed API endpoints for numbers 1, 2, 3, 5, and 8:
+### 1. GET /users
 
-### 1. GET /videos
+- **Description**: This endpoint retrieves a list of all users available in the database.
+
+- **HTTP Method**: GET
+
+- **Response**: The response will be an array of user objects, each containing `_id`, `name`, and `photoUrl`.
+
+- **Example Response**:
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+  {
+    "_id": "6152f0f5a7b6d3f582ed85da",
+    "name": "John Doe",
+    "photoUrl": "https://example.com/john-doe.jpg"
+  },
+  {
+    "_id": "6152f0f5a7b6d3f582ed85db",
+    "name": "Jane Smith",
+    "photoUrl": "https://example.com/jane-smith.jpg"
+  },
+  // More users...
+]
+```
+
+### 2. POST /users
+
+- **Description**: This endpoint allows creating a new user in the system.
+
+- **HTTP Method**: POST
+
+- **Request Body**: The request body should include the following properties:
+  - `name` (required): The name of the user (String).
+  - `photoUrl`: The URL of the user's profile photo (String).
+
+- **Response**: The response will be the newly created user object, including its assigned `_id`.
+
+- **Example Request**:
+```json
+POST /users
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "photoUrl": "https://example.com/john-doe.jpg"
+}
+```
+
+- **Example Response**:
+```json
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{
+  "_id": "6152f0f5a7b6d3f582ed85da",
+  "name": "John Doe",
+  "photoUrl": "https://example.com/john-doe.jpg"
+}
+```
+
+### 3. GET /users/:id
+
+- **Description**: This endpoint retrieves a specific user by their unique ID.
+
+- **HTTP Method**: GET
+
+- **URL Parameter**: The `id` parameter in the URL represents the `_id` of the user to retrieve.
+
+- **Response**: The response will be the user object with the matching ID, including `_id`, `name`, and `photoUrl`.
+
+- **Example Request**: GET /users/6152f0f5a7b6d3f582ed85da
+
+- **Example Response**:
+```json
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "_id": "6152f0f5a7b6d3f582ed85da",
+  "name": "John Doe",
+  "photoUrl": "https://example.com/john-doe.jpg"
+}
+```
+
+### 4. GET /videos
 
 - **Description**: This endpoint retrieves a list of all videos available in the database.
 
 - **HTTP Method**: GET
 
-- **Response**: The response will be an array of video objects, each containing `title` and `thumbnailImageUrl`.
+- **Response**: The response will be an array of video objects, each containing `title`, `userId`, and `thumbnailImageUrl`.
 
 - **Example Response**:
 ```json
@@ -127,47 +235,52 @@ Certainly! Below are the detailed API endpoints for numbers 1, 2, 3, 5, and 8:
   {
     "_id": "6152f0f5a7b6d3f582ed85d0",
     "title": "Video 1",
-    "thumbnailImageUrl": "https://example.com/video1.jpg"
+    "userId": "6152f0f5a7b6d3f582ed85da",
+    "thumbnailImageUrl": "https://example.com/video1.jpg",
   },
   {
     "_id": "6152f0f5a7b6d3f582ed85d1",
     "title": "Video 2",
+    "userId": "6152f0f5a7b6d3f582ed85da",
     "thumbnailImageUrl": "https://example.com/video2.jpg"
   },
   // More videos...
 ]
 ```
 
-### 2. POST /videos
+### 5. POST /videos
 
-- **Description**: This endpoint allows the creation of a new video in the database.
+- **Description**: This endpoint allows creating a new video associated with a user.
 
 - **HTTP Method**: POST
 
 - **Request Body**: The request body should include the following properties:
-  - `title` (required): The title of the video.
-  - `thumbnailImageUrl` (required): The URL of the video's thumbnail image.
+  - `title` (required): The title of the video (String).
+  - `thumbnailImageUrl` (required): The URL of the video's thumbnail image (String).
+  - `userId` (required): The `_id` of the user who created the video (String).
+
+- **Response**: The response will be the newly created video object, including its assigned `_id`.
 
 - **Example Request**:
 ```json
 {
   "title": "New Video",
-  "thumbnailImageUrl": "https://example.com/new_video.jpg"
+  "thumbnailImageUrl": "https://example.com/new-video.jpg",
+  "userId": "6152f0f5a7b6d3f582ed85da"
 }
 ```
-
-- **Response**: The response will be the newly created video object, including its assigned `_id`.
 
 - **Example Response**:
 ```json
 {
   "_id": "6152f0f5a7b6d3f582ed85d2",
   "title": "New Video",
-  "thumbnailImageUrl": "https://example.com/new_video.jpg"
+  "thumbnailImageUrl": "https://example.com/new-video.jpg",
+  "userId": "6152f0f5a7b6d3f582ed85da"
 }
 ```
 
-### 3. GET /videos/:id
+### 6. GET /videos/:id
 
 - **Description**: This endpoint retrieves the details of a specific video, along with its associated products and comments, based on the provided video ID.
 
@@ -175,7 +288,7 @@ Certainly! Below are the detailed API endpoints for numbers 1, 2, 3, 5, and 8:
 
 - **Parameters**: `:id` should be replaced with the `_id` of the video you want to fetch.
 
-- **Response**: The response will be the video object with its associated products and comments. The products and comments will be nested within the video object.
+- **Response**: The response will be the video object with the matching ID, including title, thumbnailImageUrl, userId, products, and comments.
 
 - **Example Response**:
 ```json
@@ -183,6 +296,7 @@ Certainly! Below are the detailed API endpoints for numbers 1, 2, 3, 5, and 8:
   "_id": "6152f0f5a7b6d3f582ed85d2",
   "title": "New Video",
   "thumbnailImageUrl": "https://example.com/new_video.jpg",
+  "userId": "6152f0f5a7b6d3f582ed85da",
   "products": [
     {
       "_id": "6152f0f5a7b6d3f582ed85d5",
@@ -212,7 +326,7 @@ Certainly! Below are the detailed API endpoints for numbers 1, 2, 3, 5, and 8:
 }
 ```
 
-### 4. POST /products
+### 7. POST /products
 
 - **Description**: This endpoint allows the creation of a new product associated with a specific video.
 
@@ -247,7 +361,7 @@ Certainly! Below are the detailed API endpoints for numbers 1, 2, 3, 5, and 8:
 }
 ```
 
-### 5. POST /comments
+### 8. POST /comments
 
 - **Description**: This endpoint allows the creation of a new comment associated with a specific video.
 
@@ -291,11 +405,14 @@ The API includes error handling for various scenarios, such as invalid requests,
 
 Here are some examples of how to use the API:
 
-1. To retrieve all videos: Send a GET request to `/videos`.
-2. To create a new video: Send a POST request to `/videos` with the required details in the request body.
-3. To retrieve the details of a video with associated products and comments: Send a GET request to `/videos/:id`, replacing `:id` with the video ID.
-4. To create a new product associated with a video: Send a POST request to `/products` with the required product details in the request body, including the `videoId`.
-5. To create a new comment associated with a video: Send a POST request to `/comments` with the required comment details in the request body, including the `videoId`.
+1. To retrieve all users: Send a GET request to /users.
+2. To retrieve a specific user by ID: Send a GET request to /users/:id, replacing :id with the user ID.
+3. To create a new user: Send a POST request to `/users` with the required details in the request body.
+4. To retrieve all videos: Send a GET request to `/videos`.
+5. To create a new video: Send a POST request to `/videos` with the required details in the request body.
+6. To retrieve the details of a video with associated products and comments: Send a GET request to `/videos/:id`, replacing `:id` with the video ID.
+7. To create a new product associated with a video: Send a POST request to `/products` with the required product details in the request body, including the `videoId`.
+8. To create a new comment associated with a video: Send a POST request to `/comments` with the required comment details in the request body, including the `videoId`.
 
 ### Conclusion
 
