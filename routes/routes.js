@@ -21,6 +21,35 @@ router.post('/users', async (req, res) => {
     }
 });
 
+
+// Route: GET /users (Get all users)
+router.get('/users', async (req, res) => {
+
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
+// Route: GET /users/:id (Get user detail by id)
+router.get('/users/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const user = await User.findById(id);
+        if (!user) {
+            throw new Error(`User with id '${id}' not found`);
+        }
+
+        res.status(200).json(user);
+
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+});
+
 // Route: POST /videos (Create a new video)
 router.post('/videos', async (req, res) => {
     const video = new Video({
