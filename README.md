@@ -130,7 +130,7 @@ Example:
 }
 ```
 
-These schemas define the structure of the data stored in the MongoDB database. The `videoSchema`, `productSchema`, and `commentSchema` are interconnected through the `videoId` property, creating a relational structure to efficiently manage videos, products, and comments in the API.
+These schemas define the structure of the data stored in the MongoDB database. The `videoSchema`, is interconnected through the `userId`. `productSchema`, and `commentSchema` are interconnected through the `videoId` property, creating a relational structure to efficiently manage users, videos, products, and comments in the API.
 
 ### API Endpoints
 
@@ -144,7 +144,8 @@ The API offers the following endpoints for managing users, videos, products, and
 
 - **Response**: The response will be an array of user objects, each containing `_id`, `name`, and `photoUrl`.
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 200
 ```json
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -163,6 +164,11 @@ Content-Type: application/json
   // More users...
 ]
 ```
+- **Error Response**
+  - Status Code: 404 Not Found
+    - Content: `{message: 'Users not found'}`
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error retrieving users', error: error message from catching the failure }`
 
 ### 2. POST /users
 
@@ -187,7 +193,8 @@ Content-Type: application/json
 }
 ```
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 201
 ```json
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -198,6 +205,10 @@ Content-Type: application/json
   "photoUrl": "https://example.com/john-doe.jpg"
 }
 ```
+- **Error Response**
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error creating user', error: error message from catching the failure }`
+
 
 ### 3. GET /users/:id
 
@@ -211,7 +222,8 @@ Content-Type: application/json
 
 - **Example Request**: GET /users/6152f0f5a7b6d3f582ed85da
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 200
 ```json
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -223,6 +235,13 @@ Content-Type: application/json
 }
 ```
 
+- **Error Response**
+  - Status Code: 404 Not Found
+    - Content: `{ message: "User with id '6152f0f5a7b6d3f582ed85da' not found" }`
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error retrieving user', error: error message from catching the failure }`
+
+
 ### 4. GET /videos
 
 - **Description**: This endpoint retrieves a list of all videos available in the database.
@@ -231,8 +250,11 @@ Content-Type: application/json
 
 - **Response**: The response will be an array of video objects, each containing `title`, `userId`, and `thumbnailImageUrl`.
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 200
 ```json
+HTTP/1.1 200 OK
+Content-Type: application/json
 [
   {
     "_id": "6152f0f5a7b6d3f582ed85d0",
@@ -249,6 +271,13 @@ Content-Type: application/json
   // More videos...
 ]
 ```
+
+- **Error Response**
+  - Status Code: 404 Not Found
+    - Content: `{message: 'Videos not found'}`
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error retrieving videos', error: error message from catching the failure }`
+
 
 ### 5. POST /videos
 
@@ -272,8 +301,11 @@ Content-Type: application/json
 }
 ```
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 201
 ```json
+HTTP/1.1 201 Created
+Content-Type: application/json
 {
   "_id": "6152f0f5a7b6d3f582ed85d2",
   "title": "New Video",
@@ -281,52 +313,40 @@ Content-Type: application/json
   "userId": "6152f0f5a7b6d3f582ed85da"
 }
 ```
+- **Error Response**
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error creating video', error: error message from catching the failure }`
+
+
 
 ### 6. GET /videos/:id
 
-- **Description**: This endpoint retrieves the details of a specific video, along with its associated products and comments, based on the provided video ID.
+- **Description**: This endpoint retrieves a specific user by their unique ID.
 
 - **HTTP Method**: GET
 
 - **Parameters**: `:id` should be replaced with the `_id` of the video you want to fetch.
 
-- **Response**: The response will be the video object with the matching ID, including title, thumbnailImageUrl, userId, products, and comments.
+- **Response**:  The response will be an array of user objects, each containing `_id`, `title`, `thumbnailImageUrl`, and `userId`.
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 200
 ```json
+HTTP/1.1 200 OK
+Content-Type: application/json
 {
   "_id": "6152f0f5a7b6d3f582ed85d2",
   "title": "New Video",
   "thumbnailImageUrl": "https://example.com/new_video.jpg",
   "userId": "6152f0f5a7b6d3f582ed85da",
-  "products": [
-    {
-      "_id": "6152f0f5a7b6d3f582ed85d5",
-      "productUrl": "https://example.com/product1",
-      "title": "Product 1",
-      "price": 100000
-    },
-    {
-      "_id": "6152f0f5a7b6d3f582ed85d6",
-      "productUrl": "https://example.com/product2",
-      "title": "Product 2",
-      "price": 29999
-    }
-  ],
-  "comments": [
-    {
-      "_id": "6152f0f5a7b6d3f582ed85d8",
-      "username": "user1",
-      "comment": "Great video!"
-    },
-    {
-      "_id": "6152f0f5a7b6d3f582ed85d9",
-      "username": "user2",
-      "comment": "Awesome content!"
-    }
-  ]
 }
 ```
+- **Error Response**
+  - Status Code: 404 Not Found
+    - Content: `{ message: "Video with id '6152f0f5a7b6d3f582ed85da' not found" }`
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error retrieving video', error: error message from catching the failure }`
+
 
 
 ### 7. GET /videos/:videoId/products
@@ -340,8 +360,11 @@ Content-Type: application/json
 
 - **Response**: The response will be an array of product objects, each containing information about the product.
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 200
 ```json
+HTTP/1.1 200 OK
+Content-Type: application/json
 [
   {
     "_id": "6152f0f5a7b6d3f582ed85e0",
@@ -360,6 +383,11 @@ Content-Type: application/json
   // More products associated with the video...
 ]
 ```
+ **Error Response**
+  - Status Code: 404 Not Found
+    - Content: `{ message: "Products not found for this video" }`
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error retrieving products', error: error message from catching the failure }`
 
 ### 8. GET /videos/:videoId/comments
 
@@ -372,8 +400,11 @@ Content-Type: application/json
 
 - **Response**: The response will be an array of comment objects, each containing information about the comment.
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 200
 ```json
+HTTP/1.1 200 OK
+Content-Type: application/json
 [
   {
     "_id": "6152f0f5a7b6d3f582ed85c0",
@@ -394,6 +425,11 @@ Content-Type: application/json
   // More comments associated with the video...
 ]
 ```
+ **Error Response**
+  - Status Code: 404 Not Found
+    - Content: `{ message: "Comments not found for this video" }`
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error retrieving comments', error: error message from catching the failure }`
 
 
 ### 9. POST /products
@@ -420,8 +456,11 @@ Content-Type: application/json
 
 - **Response**: The response will be the newly created product object, including its assigned `_id`.
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 201
 ```json
+HTTP/1.1 201 Created
+Content-Type: application/json
 {
   "_id": "6152f0f5a7b6d3f582ed85da",
   "productUrl": "https://example.com/product3",
@@ -430,6 +469,10 @@ Content-Type: application/json
   "videoId": "6152f0f5a7b6d3f582ed85d2"
 }
 ```
+- **Error Response**
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error creating product', error: error message from catching the failure }`
+
 
 ### 10. POST /comments
 
@@ -453,8 +496,11 @@ Content-Type: application/json
 
 - **Response**: The response will be the newly created comment object, including its assigned `_id`.
 
-- **Example Response**:
+- **Example Success Response**:
+- Status Code: 201
 ```json
+HTTP/1.1 201 Created
+Content-Type: application/json
 {
   "_id": "6152f0f5a7b6d3f582ed85db",
   "username": "user3",
@@ -463,6 +509,10 @@ Content-Type: application/json
   "createdAt": "2023-10-02T12:34:56.789Z"
 }
 ```
+- **Error Response**
+  - Status Code: 500 Internal Server Error
+    - Content: `{ message: 'Error creating video', error: error message from catching the failure }`
+
 
 Please note that the examples provided above are for illustrative purposes and the actual data may vary depending on your specific application and database. Also, ensure to replace `'DATABASE_URL'` with the actual URL to your MongoDB server.
 ...
@@ -488,6 +538,6 @@ Here are some examples of how to use the API:
 
 ### Conclusion
 
-The API structure provided in this README allows seamless interaction with videos, products, and comments in your application. The defined endpoints facilitate data retrieval, creation, and updates for each resource, providing a robust and efficient backend for your frontend application.
+The API structure provided in this README allows seamless interaction with users, videos, products, and comments in your application. The defined endpoints facilitate data retrieval, creation, and updates for each resource, providing a robust and efficient backend for your frontend application.
 
 For detailed implementation and code samples, please refer to the project files and the respective API route handlers in the server code.
