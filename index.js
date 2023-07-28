@@ -21,12 +21,35 @@ database.once('connected', () => {
     console.log('Database connected');
 })
 
-const routes = require('./routes/routes');
 const app = express();
 const port = 3000;
 
+// Import userRoutes
+const userRoutes = require('./routes/userRoutes');
+
+// Import videoRoutes
+const videoRoutes = require('./routes/videoRoutes');
+
+// Import productRoutes
+const productRoutes = require('./routes/productRoutes');
+
+// Import commentRoutes
+const commentRoutes = require('./routes/commentRoutes');
+
+// set content-type application/json
 app.use(express.json());
-app.use('/api', routes);
+
+// Use the userRoutes for '/api' path
+app.use('/api', userRoutes);
+
+// Use the videoRoutes for '/api' path
+app.use('/api', videoRoutes);
+
+// Use the productRoutes for '/api' path
+app.use('/api', productRoutes);
+
+// Use the commentRoutes for '/api' path
+app.use('/api', commentRoutes);
 
 app.listen(port, () => {
     console.log(`listening on port ${port}`)
