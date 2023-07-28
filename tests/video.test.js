@@ -12,18 +12,14 @@ const User = require('../models/user');
 const userId = '6152f0f5a7b6d3f582ed85d4';
 
 beforeAll(async () => {
-
-    await User.create({ _id: userId, name: 'Test User', photoUrl: 'https://example.com/test-user.jpg' });
-
-});
-
-
-afterAll(async () => {
     await Comment.deleteMany();
     await Product.deleteMany();
     await Video.deleteMany();
     await User.deleteMany();
-})
+
+    await User.create({ _id: userId, name: 'Test User', photoUrl: 'https://example.com/test-user.jpg' });
+
+});
 
 let videoId = '';
 describe('POST /videos', () => {
@@ -91,8 +87,8 @@ describe('POST /products', () => {
        
     });
 });
-
 describe('GET /videos/:videoId/products', () => {
+    console.log(videoId);
     it('should get products associated with a specific video', async () => {
         const response = await request(app).get(`/api/videos/${videoId}/products`);
         expect(response.status).toBe(200);
