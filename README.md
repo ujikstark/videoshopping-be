@@ -47,7 +47,7 @@ To set up and run the API, follow these steps:
 
 ## Database Structure
 
-The API utilizes MongoDB as the database. It consists of three main schemas:
+The API utilizes MongoDB as the database. It consists of four main schemas:
 
 ### User Schema
 
