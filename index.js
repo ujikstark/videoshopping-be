@@ -3,13 +3,25 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 
+let mongoString = process.env.DATABASE_URL;
+let port = 3000;
+
+
 // Check if the NODE_ENV environment variable is set to 'test'
-const isTesting = process.env.NODE_ENV === 'test';
+switch (process.env.NODE_ENV) {
+    case 'test':
+        mongoString = process.env.DATABASE_TEST_URL;
+        break;
+    case 'production':
+        port = 3000;
+        mongoString = process.env.DATABASE_PROD_URL;
+        break;
+}
 
-// Use a different database URL for testing
-const mongoString = isTesting ? process.env.DATABASE_TEST_URL : process.env.DATABASE_URL;
 
+console.log(mongoString);
 mongoose.connect(mongoString);
+
 
 const database = mongoose.connection;
 
@@ -22,7 +34,6 @@ database.once('connected', () => {
 })
 
 const app = express();
-const port = 3000;
 
 // Import userRoutes
 const userRoutes = require('./routes/userRoutes');
@@ -38,18 +49,21 @@ const commentRoutes = require('./routes/commentRoutes');
 
 // set content-type application/json
 app.use(express.json());
+app.use('/videos', (req, res) => {
+    res.send({tes: "halo"});
+})
 
-// Use the userRoutes for '/api' path
-app.use('/api', userRoutes);
+// Use the userRoutes for '/v1' path
+app.use('/v1', userRoutes);
 
-// Use the videoRoutes for '/api' path
-app.use('/api', videoRoutes);
+// Use the videoRoutes for '/v1' path
+app.use('/v1', videoRoutes);
 
-// Use the productRoutes for '/api' path
-app.use('/api', productRoutes);
+// Use the productRoutes for '/v1' path
+app.use('/v1', productRoutes);
 
-// Use the commentRoutes for '/api' path
-app.use('/api', commentRoutes);
+// Use the commentRoutes for '/v1' path
+app.use('/v1', commentRoutes);
 
 app.listen(port, () => {
     console.log(`listening on port ${port}`)

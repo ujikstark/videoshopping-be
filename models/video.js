@@ -10,6 +10,10 @@ const videoSchema = new mongoose.Schema({
         required: true,
         type: String
     },
+    videoUrl: {
+        required: true,
+        type: String
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,

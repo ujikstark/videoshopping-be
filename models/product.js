@@ -5,6 +5,10 @@ const productSchema = new mongoose.Schema({
         required: true,
         type: String
     },
+    productImageUrl: {
+        required: true,
+        type: String
+    },
     title: { required: true, type: String },
     price: { require: true, type: Number },
     videoId: {

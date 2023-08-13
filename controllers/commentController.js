@@ -1,6 +1,7 @@
 // controllers/commentController.js
 
 const Comment = require('../models/comment');
+const Video = require('../models/video');
 
 // Function to create a new comment on video
 const createComment =  async (req, res) => {
@@ -11,6 +12,12 @@ const createComment =  async (req, res) => {
     });
 
     try {
+
+        const video = await Video.findById(req.body.videoId);
+        if (!video) {
+            return res.status(404).json({ message: `Video with id '${req.body.videoId}' not found` });
+        }
+
         const commentToSave = await comment.save();
         res.status(201).json(commentToSave);
     } catch (error) {

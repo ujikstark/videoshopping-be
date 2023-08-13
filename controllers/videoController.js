@@ -3,6 +3,7 @@
 const Video = require('../models/video');
 const Product = require('../models/product');;
 const Comment = require('../models/comment');
+const User = require('../models/user');
 
 // Function to create a new video
 const createVideo = async (req, res) => {
@@ -14,6 +15,12 @@ const createVideo = async (req, res) => {
     });
 
     try {
+        const user = await User.findById(req.body.userId);
+
+        if (!user) {
+            return res.status(404).json({ message: `User with id '${req.body.userId}' not found` });
+        }
+
         const videoToSave = await video.save();
         res.status(201).json(videoToSave);
     } catch (err) {
@@ -25,7 +32,7 @@ const createVideo = async (req, res) => {
 const getVideos =  async (req, res) => {
 
     try {
-        const videos = await Video.find();
+        const videos = await Video.find().populate('userId');
 
         if (videos.length === 0) {
             return res.status(404).json({ message: 'videos not found' });

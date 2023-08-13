@@ -1,6 +1,7 @@
 // controllers/productController.js
 
 const Product = require('../models/product');
+const Video = require('../models/video');
 
 // Function to create a new product on video
 const createProduct = async (req, res) => {
@@ -12,6 +13,12 @@ const createProduct = async (req, res) => {
     });
 
     try {
+        const video = await Video.findById(req.body.videoId);
+        if (!video) {
+            return res.status(404).json({ message: `Video with id '${req.body.videoId}' not found` });
+        }
+
+
         const productToSave = await product.save();
         res.status(201).json(productToSave);
     } catch (err) {
